@@ -54,9 +54,9 @@ Private Sub Workbook_Open()
     strInput = ThisWorkbook.Sheets("VBA").TextBox2
     
     question = OpenAI_InputRole2JSON("user", strInput)
-    MODEL = OpenAI_Model2JSON(strInput, strOpenAI_Model)
+    request = OpenAI_Model2JSON(strInput, strOpenAI_Model)
     
     ThisWorkbook.Sheets("VBA").TextBox6 = question
-    ThisWorkbook.Sheets("VBA").TextBox7 = MODEL
+    ThisWorkbook.Sheets("VBA").TextBox7 = request
 
 End Sub
