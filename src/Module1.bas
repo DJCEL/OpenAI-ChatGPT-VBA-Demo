@@ -11,7 +11,7 @@ Private Const INTERNET_CONNECTION_MODEM_BUSY As Long = &H8
 Private Const INTERNET_RAS_INSTALLED As Long = &H10
 Private Const INTERNET_CONNECTION_OFFLINE As Long = &H20
 Private Const INTERNET_CONNECTION_CONFIGURED As Long = &H40
-
+'-----------------------------------------------------------------------------------------------
 Public Function IsInternetConnected() As Boolean
     Dim R As Long
 
@@ -28,6 +28,7 @@ Public Function IsInternetConnected() As Boolean
     End If
     
 End Function
+'-----------------------------------------------------------------------------------------------
 Public Sub Test_URL_ChatGPT()
     
     Dim strOpenAI_URL As String
@@ -54,6 +55,7 @@ Public Sub Test_URL_ChatGPT()
     bRes = OpenAI_Test_URL(strOpenAI_URL, strOpenAI_APIKey, strOpenAI_Model)
     
 End Sub
+'-----------------------------------------------------------------------------------------------
 Public Sub Processing_ChatGPT()
 
     Dim strPrompt As String
@@ -104,6 +106,7 @@ Public Sub Processing_ChatGPT()
     ThisWorkbook.Sheets("VBA").TextBox5 = strStatus
     
 End Sub
+'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_Completion(ByVal strOpenAI_URL As String, ByVal strOpenAI_APIKey As String, ByVal strOpenAI_Model As String, ByVal strInputTextUser As String) As Boolean
 
     Dim httpRequest As MSXML2.XMLHTTP60
@@ -180,8 +183,8 @@ Private Function OpenAI_Completion(ByVal strOpenAI_URL As String, ByVal strOpenA
 OpenAI_Completion:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure OpenAI_Completion, line " & Erl & "."
 
-
 End Function
+'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_ChatCompletion(ByVal strOpenAI_URL As String, ByVal strOpenAI_APIKey As String, ByVal strOpenAI_Model As String, ByVal strInputTextUser As String) As Boolean
 
     Dim httpRequest As MSXML2.XMLHTTP60
@@ -255,6 +258,7 @@ OpenAI_ChatCompletion:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure OpenAI_ChatCompletion, line " & Erl & "."
      
 End Function
+'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_Pricing(ByVal strOpenAI_Model As String) As Single
 
     Dim pricing_per_token As Single
@@ -284,6 +288,7 @@ Private Function OpenAI_Pricing(ByVal strOpenAI_Model As String) As Single
     OpenAI_Pricing = pricing_per_token / 1000
     
 End Function
+'-----------------------------------------------------------------------------------------------
 Public Function OpenAI_Model2JSON(ByVal strInputText As String, ByVal strOpenAI_Model As String) As String
 
     Dim strMessages As String
@@ -338,6 +343,7 @@ Public Function OpenAI_Model2JSON(ByVal strInputText As String, ByVal strOpenAI_
     OpenAI_Model2JSON = requestBody
 
 End Function
+'-----------------------------------------------------------------------------------------------
 Public Function OpenAI_AppendMessage(ByVal strMessages As String, ByVal strRole As String, ByVal strInputText As String) As String
 
     Dim strJSON As String
@@ -372,6 +378,7 @@ Public Function OpenAI_InputRole2JSON(ByVal strRole As String, ByVal strText As 
     OpenAI_InputRole2JSON = strJSON
     
 End Function
+'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_Decode_JSON_completion(ByVal completion As String, ByVal strOpenAI_Model As String) As String
 
     On Error GoTo OpenAI_Decode_JSON_Error
@@ -403,6 +410,7 @@ OpenAI_Decode_JSON_Error:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure OpenAI_Decode_JSON_completion, line " & Erl & "."
 
 End Function
+'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_Decode_JSON_completion_tokens(ByVal completion As String) As String
 
     On Error GoTo OpenAI_Decode_JSON_Error
@@ -426,6 +434,7 @@ OpenAI_Decode_JSON_Error:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure OpenAI_Decode_JSON_completion_tokens, line " & Erl & "."
 
 End Function
+'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_Decode_JSON_ChatGPTError(ByVal completion As String) As String
 
     On Error GoTo OpenAI_Decode_JSON_ChatGPTError_Error
@@ -448,6 +457,7 @@ OpenAI_Decode_JSON_ChatGPTError_Error:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure OpenAI_Decode_JSON_ChatGPTError, line " & Erl & "."
 
 End Function
+'-----------------------------------------------------------------------------------------------
 Public Function OpenAI_Test_URL(ByVal strOpenAI_URL As String, ByVal strOpenAI_APIKey As String, ByVal strOpenAI_Model As String) As Boolean
 
     Dim httpRequest As MSXML2.XMLHTTP60
@@ -505,6 +515,7 @@ Public Function OpenAI_Test_URL(ByVal strOpenAI_URL As String, ByVal strOpenAI_A
     End If
     
 End Function
+'-----------------------------------------------------------------------------------------------
 Public Function OpenAI_GetModelData(ByVal strOpenAI_URL As String, ByVal strOpenAI_APIKey As String, ByVal strOpenAI_Model As String) As String
 
     Dim httpRequest As MSXML2.XMLHTTP60
@@ -538,6 +549,7 @@ Public Function OpenAI_GetModelData(ByVal strOpenAI_URL As String, ByVal strOpen
     End If
 
 End Function
+'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_Errors(ByVal strErrorCode As String, ByVal strCompletion As String) As String
 
     Dim strErrorMessage As String
