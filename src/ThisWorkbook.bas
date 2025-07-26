@@ -19,11 +19,11 @@
 
 Private Sub Workbook_Open()
 
+     Dim sourceRange As Excel.Range
+    Dim cb As ComboBox
     Dim strInput As String
     Dim question As String
     Dim request As String
-    Dim sourceRange As Excel.Range
-    Dim cb As ComboBox
     Dim strOpenAI_Model As String
 
     Set WS = ThisWorkbook.Sheets("VBA")
