@@ -1,6 +1,4 @@
 Attribute VB_Name = "Module1"
-Option Explicit
-
 ' ThisWorkbook.Sheets("VBA").CommandButton1 : <Submit request>
 ' ThisWorkbook.Sheets("VBA").CommandButton2 : <Check URL, API Key and Model>
 ' ThisWorkbook.Sheets("VBA").ComboBox1 : OpenAI_Model
@@ -19,6 +17,8 @@ Option Explicit
 ' ThisWorkbook.Sheets("VBA").TextBox14 : OpenAI_Role_JSON
 ' ThisWorkbook.Sheets("VBA").TextBox15 : Number_Tokens
 ' ThisWorkbook.Sheets("VBA").TextBox16 : Price
+
+Option Explicit
 
 Public Declare PtrSafe Function InternetGetConnectedState Lib "wininet.dll" (lpdwFlags As LongPtr, ByVal dwReserved As Long) As Boolean
 
