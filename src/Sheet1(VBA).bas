@@ -16,6 +16,8 @@ Option Explicit
 ' ThisWorkbook.Sheets("VBA").TextBox10 : Details_Model
 ' ThisWorkbook.Sheets("VBA").TextBox7 : Request
 ' ThisWorkbook.Sheets("VBA").TextBox5 : Request_OpenAI_Status
+' ThisWorkbook.Sheets("VBA").TextBox15 : Number_Tokens
+' ThisWorkbook.Sheets("VBA").TextBox16 : Price
 
 Private Sub CommandButton1_Click()
 
