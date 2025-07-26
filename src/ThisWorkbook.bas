@@ -19,7 +19,7 @@
 
 Private Sub Workbook_Open()
 
-     Dim sourceRange As Excel.Range
+    Dim sourceRange As Excel.Range
     Dim cb As ComboBox
     Dim strInput As String
     Dim question As String
