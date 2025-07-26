@@ -1,12 +1,12 @@
 Attribute VB_Name = "Module1"
 Option Explicit
 
-Public Flg As LongPtr
 Public Declare PtrSafe Function InternetGetConnectedState Lib "wininet.dll" (lpdwFlags As LongPtr, ByVal dwReserved As Long) As Boolean
 
 '-----------------------------------------------------------------------------------------------
 Public Function IsInternetConnected() As Boolean
     Dim R As Long
+    Dim Flg As LongPtr
 
     Const INTERNET_CONNECTION_MODEM As Long = &H1
     Const INTERNET_CONNECTION_LAN As Long = &H2
