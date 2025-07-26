@@ -12,8 +12,8 @@
 ' ThisWorkbook.Sheets("VBA").TextBox9 : Internet_Status
 ' ThisWorkbook.Sheets("VBA").TextBox10 : Details_Model
 ' ThisWorkbook.Sheets("VBA").TextBox11 : Request_Status
-' ThisWorkbook.Sheets("VBA").TextBox13 : OpenAI_Role
-' ThisWorkbook.Sheets("VBA").TextBox14 : OpenAI_Role_JSON
+' ThisWorkbook.Sheets("VBA").TextBox13 : OpenAI_SystemRole
+' ThisWorkbook.Sheets("VBA").TextBox14 : OpenAI_SystemRole_JSON
 ' ThisWorkbook.Sheets("VBA").TextBox15 : Number_Tokens
 ' ThisWorkbook.Sheets("VBA").TextBox16 : Price
 
