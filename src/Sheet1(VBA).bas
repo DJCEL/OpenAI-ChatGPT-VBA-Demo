@@ -15,7 +15,7 @@ Option Explicit
 ' ThisWorkbook.Sheets("VBA").TextBox4 : Output_Text_JSON
 ' ThisWorkbook.Sheets("VBA").TextBox10 : Details_Model
 ' ThisWorkbook.Sheets("VBA").TextBox7 : Request
-' ThisWorkbook.Sheets("VBA").TextBox5 : Request_Status2
+' ThisWorkbook.Sheets("VBA").TextBox5 : Request_OpenAI_Status
 
 Private Sub CommandButton1_Click()
 
