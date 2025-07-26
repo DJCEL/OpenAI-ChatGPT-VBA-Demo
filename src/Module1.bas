@@ -4,16 +4,17 @@ Option Explicit
 Public Flg As LongPtr
 Public Declare PtrSafe Function InternetGetConnectedState Lib "wininet.dll" (lpdwFlags As LongPtr, ByVal dwReserved As Long) As Boolean
 
-Private Const INTERNET_CONNECTION_MODEM As Long = &H1
-Private Const INTERNET_CONNECTION_LAN As Long = &H2
-Private Const INTERNET_CONNECTION_PROXY As Long = &H4
-Private Const INTERNET_CONNECTION_MODEM_BUSY As Long = &H8
-Private Const INTERNET_RAS_INSTALLED As Long = &H10
-Private Const INTERNET_CONNECTION_OFFLINE As Long = &H20
-Private Const INTERNET_CONNECTION_CONFIGURED As Long = &H40
 '-----------------------------------------------------------------------------------------------
 Public Function IsInternetConnected() As Boolean
     Dim R As Long
+
+    Const INTERNET_CONNECTION_MODEM As Long = &H1
+    Const INTERNET_CONNECTION_LAN As Long = &H2
+    Const INTERNET_CONNECTION_PROXY As Long = &H4
+    Const INTERNET_CONNECTION_MODEM_BUSY As Long = &H8
+    Const INTERNET_RAS_INSTALLED As Long = &H10
+    Const INTERNET_CONNECTION_OFFLINE As Long = &H20
+    Const INTERNET_CONNECTION_CONFIGURED As Long = &H40
 
     R = InternetGetConnectedState(Flg, 0&)
 
