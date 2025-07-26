@@ -1,3 +1,4 @@
+Attribute VB_Name = "ThisWorkbook"
 Private Sub Workbook_Open()
 
     Dim WS As Excel.Worksheet
