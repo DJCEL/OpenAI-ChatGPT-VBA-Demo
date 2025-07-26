@@ -1,3 +1,12 @@
+' ThisWorkbook.Sheets("VBA").TextBox8 : OpenAI_URL
+' ThisWorkbook.Sheets("VBA").TextBox1 : OpenAI_API_Key
+' ThisWorkbook.Sheets("VBA").ComboBox1 : OpenAI_Model
+' ThisWorkbook.Sheets("VBA").CommandButton1 : <Submit request>
+' ThisWorkbook.Sheets("VBA").CommandButton2 : <Check URL, API Key and Model>
+' ThisWorkbook.Sheets("VBA").TextBox13 : OpenAI_Role
+' ThisWorkbook.Sheets("VBA").TextBox2 : Input_Text
+' ThisWorkbook.Sheets("VBA").TextBox4 : Output_Text
+
 Private Sub Workbook_Open()
 
     Dim WS As Excel.Worksheet
