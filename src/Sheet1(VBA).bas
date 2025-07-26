@@ -1,10 +1,10 @@
 Option Explicit
 
-' ThisWorkbook.Sheets("VBA").TextBox8 : OpenAI_URL
-' ThisWorkbook.Sheets("VBA").TextBox1 : OpenAI_API_Key
-' ThisWorkbook.Sheets("VBA").ComboBox1 : OpenAI_Model
 ' ThisWorkbook.Sheets("VBA").CommandButton1 : <Submit request>
 ' ThisWorkbook.Sheets("VBA").CommandButton2 : <Check URL, API Key and Model>
+' ThisWorkbook.Sheets("VBA").ComboBox1 : OpenAI_Model
+' ThisWorkbook.Sheets("VBA").TextBox8 : OpenAI_URL
+' ThisWorkbook.Sheets("VBA").TextBox1 : OpenAI_API_Key
 ' ThisWorkbook.Sheets("VBA").TextBox9 : Internet_Status
 ' ThisWorkbook.Sheets("VBA").TextBox11 : Request_Status
 ' ThisWorkbook.Sheets("VBA").TextBox13 : OpenAI_Role
