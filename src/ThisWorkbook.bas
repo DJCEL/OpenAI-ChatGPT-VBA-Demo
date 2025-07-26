@@ -20,20 +20,17 @@
 Private Sub Workbook_Open()
 
     Dim WS As Excel.Worksheet
-    Dim WS_params As Excel.Worksheet
     Dim strInput As String
     Dim question As String
-    Dim MODEL As String
+    Dim request As String
     Dim sourceRange As Excel.Range
     Dim cb As ComboBox
     Dim strOpenAI_Model As String
 
     Set WS = ThisWorkbook.Sheets("VBA")
-    Set WS_params = ThisWorkbook.Sheets("params")
-    
     
     Set cb = ThisWorkbook.Sheets("VBA").ComboBox1
-    Set sourceRange = WS_params.Range("A2:A33")
+    Set sourceRange = ThisWorkbook.Sheets("params").Range("A2:A33")
     cb.List = sourceRange.Value
     
     ThisWorkbook.Sheets("VBA").ComboBox1 = "gpt-4.1"
