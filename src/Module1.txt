@@ -565,7 +565,3 @@ Private Function OpenAI_Errors(ByVal strErrorCode As String, ByVal strCompletion
     OpenAI_Errors = strErrorMessage
 
 End Function
-
-
-
-
