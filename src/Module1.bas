@@ -1,3 +1,4 @@
+Attribute VB_Name = "Module1"
 Option Explicit
 
 Public Flg As LongPtr
