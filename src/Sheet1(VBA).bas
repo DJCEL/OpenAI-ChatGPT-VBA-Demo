@@ -6,6 +6,8 @@ Option Explicit
 ' ThisWorkbook.Sheets("VBA").CommandButton1 : <Submit request>
 ' ThisWorkbook.Sheets("VBA").CommandButton2 : <Check URL, API Key and Model>
 ' ThisWorkbook.Sheets("VBA").TextBox13 : OpenAI_Role
+' ThisWorkbook.Sheets("VBA").TextBox2 : Input_Text
+' ThisWorkbook.Sheets("VBA").TextBox4 : Output_Text
 
 Private Sub CommandButton1_Click()
 
