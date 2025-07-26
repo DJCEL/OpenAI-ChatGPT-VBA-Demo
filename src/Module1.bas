@@ -43,6 +43,10 @@ Public Sub Test_URL_ChatGPT()
     strOpenAI_URL = ThisWorkbook.Sheets("VBA").TextBox8
     strOpenAI_APIKey = ThisWorkbook.Sheets("VBA").TextBox1
     strOpenAI_Model = ThisWorkbook.Sheets("VBA").ComboBox1
+
+    If (strOpenAI_URL = "")
+        strOpenAI_URL = "https://api.openai.com"
+    End If
     
     bRes = IsInternetConnected()
     If (bRes = False) Then
@@ -78,6 +82,10 @@ Public Sub Processing_ChatGPT()
     strOpenAI_APIKey = ThisWorkbook.Sheets("VBA").TextBox1
     strOpenAI_Model = ThisWorkbook.Sheets("VBA").ComboBox1
     strPrompt = ThisWorkbook.Sheets("VBA").TextBox2
+
+    If (strOpenAI_URL = "")
+        strOpenAI_URL = "https://api.openai.com"
+    End If
     
     bRes = IsInternetConnected()
     If (bRes = False) Then
