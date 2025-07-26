@@ -19,7 +19,6 @@
 
 Private Sub Workbook_Open()
 
-    Dim WS As Excel.Worksheet
     Dim strInput As String
     Dim question As String
     Dim request As String
