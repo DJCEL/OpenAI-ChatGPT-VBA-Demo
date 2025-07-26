@@ -363,6 +363,7 @@ Public Function OpenAI_AppendMessage(ByVal strMessages As String, ByVal strRole 
     OpenAI_AppendMessage = strMessages
     
 End Function
+'-----------------------------------------------------------------------------------------------
 Public Function OpenAI_InputRole2JSON(ByVal strRole As String, ByVal strText As String) As String
 
     Dim strJSON As String
