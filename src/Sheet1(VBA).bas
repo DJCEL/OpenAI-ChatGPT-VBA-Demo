@@ -5,9 +5,17 @@ Option Explicit
 ' ThisWorkbook.Sheets("VBA").ComboBox1 : OpenAI_Model
 ' ThisWorkbook.Sheets("VBA").CommandButton1 : <Submit request>
 ' ThisWorkbook.Sheets("VBA").CommandButton2 : <Check URL, API Key and Model>
+' ThisWorkbook.Sheets("VBA").TextBox9 : Internet_Status
+' ThisWorkbook.Sheets("VBA").TextBox11 : Request_Status
 ' ThisWorkbook.Sheets("VBA").TextBox13 : OpenAI_Role
+' ThisWorkbook.Sheets("VBA").TextBox14 : OpenAI_Role_JSON
 ' ThisWorkbook.Sheets("VBA").TextBox2 : Input_Text
-' ThisWorkbook.Sheets("VBA").TextBox4 : Output_Text
+' ThisWorkbook.Sheets("VBA").TextBox6 : Input_Text_JSON
+' ThisWorkbook.Sheets("VBA").TextBox3 : Output_Text
+' ThisWorkbook.Sheets("VBA").TextBox4 : Output_Text_JSON
+' ThisWorkbook.Sheets("VBA").TextBox10 : Details_Model
+' ThisWorkbook.Sheets("VBA").TextBox7 : Request
+' ThisWorkbook.Sheets("VBA").TextBox5 : Request_Status2
 
 Private Sub CommandButton1_Click()
 
