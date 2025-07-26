@@ -1,5 +1,5 @@
 # OpenAI-ChatGPT-VBA-Demo
-A demo to use ChatGPT in VBA (Excel)
+A demo to use ChatGPT in VBA (Excel here)
 
 It uses the OpenAI API SDK - https://platform.openai.com/docs/api-reference/introduction. You can obtain your OPENAI_API_KEY here : https://platform.openai.com/api-keys
 
