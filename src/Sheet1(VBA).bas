@@ -1,5 +1,3 @@
-Option Explicit
-
 ' ThisWorkbook.Sheets("VBA").CommandButton1 : <Submit request>
 ' ThisWorkbook.Sheets("VBA").CommandButton2 : <Check URL, API Key and Model>
 ' ThisWorkbook.Sheets("VBA").ComboBox1 : OpenAI_Model
@@ -18,6 +16,8 @@ Option Explicit
 ' ThisWorkbook.Sheets("VBA").TextBox14 : OpenAI_Role_JSON
 ' ThisWorkbook.Sheets("VBA").TextBox15 : Number_Tokens
 ' ThisWorkbook.Sheets("VBA").TextBox16 : Price
+
+Option Explicit
 
 Private Sub CommandButton1_Click()
 
