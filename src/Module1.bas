@@ -22,11 +22,10 @@ Option Explicit
 
 Public Declare PtrSafe Function InternetGetConnectedState Lib "wininet.dll" (lpdwFlags As LongPtr, ByVal dwReserved As Long) As Boolean
 
-'-----------------------------------------------------------------------------------------------
 Public Function IsInternetConnected() As Boolean
     Dim R As Long
     Dim Flg As LongPtr
-
+    
     Const INTERNET_CONNECTION_MODEM As Long = &H1
     Const INTERNET_CONNECTION_LAN As Long = &H2
     Const INTERNET_CONNECTION_PROXY As Long = &H4
@@ -34,6 +33,7 @@ Public Function IsInternetConnected() As Boolean
     Const INTERNET_RAS_INSTALLED As Long = &H10
     Const INTERNET_CONNECTION_OFFLINE As Long = &H20
     Const INTERNET_CONNECTION_CONFIGURED As Long = &H40
+    
 
     R = InternetGetConnectedState(Flg, 0&)
 
@@ -48,7 +48,6 @@ Public Function IsInternetConnected() As Boolean
     End If
     
 End Function
-'-----------------------------------------------------------------------------------------------
 Public Sub Test_URL_ChatGPT()
     
     Dim strOpenAI_URL As String
@@ -62,10 +61,6 @@ Public Sub Test_URL_ChatGPT()
     strOpenAI_URL = ThisWorkbook.Sheets("VBA").TextBox8
     strOpenAI_APIKey = ThisWorkbook.Sheets("VBA").TextBox1
     strOpenAI_Model = ThisWorkbook.Sheets("VBA").ComboBox1
-
-    If (strOpenAI_URL = "")
-        strOpenAI_URL = "https://api.openai.com"
-    End If
     
     bRes = IsInternetConnected()
     If (bRes = False) Then
@@ -79,7 +74,6 @@ Public Sub Test_URL_ChatGPT()
     bRes = OpenAI_Test_URL(strOpenAI_URL, strOpenAI_APIKey, strOpenAI_Model)
     
 End Sub
-'-----------------------------------------------------------------------------------------------
 Public Sub Processing_ChatGPT()
 
     Dim strPrompt As String
@@ -88,6 +82,7 @@ Public Sub Processing_ChatGPT()
     Dim strOpenAI_Model As String
     Dim bRes As Boolean
     Dim strStatus As String
+    Dim bResponseAPI As Boolean
     
     Application.ScreenUpdating = True
     ThisWorkbook.Sheets("VBA").TextBox5 = ""
@@ -101,10 +96,8 @@ Public Sub Processing_ChatGPT()
     strOpenAI_APIKey = ThisWorkbook.Sheets("VBA").TextBox1
     strOpenAI_Model = ThisWorkbook.Sheets("VBA").ComboBox1
     strPrompt = ThisWorkbook.Sheets("VBA").TextBox2
-
-    If (strOpenAI_URL = "")
-        strOpenAI_URL = "https://api.openai.com"
-    End If
+    bResponseAPI = ThisWorkbook.Sheets("VBA").CheckBox1
+    
     
     bRes = IsInternetConnected()
     If (bRes = False) Then
@@ -118,8 +111,15 @@ Public Sub Processing_ChatGPT()
     If (strOpenAI_Model = "gpt-3.5-turbo-instruct" Or strOpenAI_Model = "babbage-002" Or strOpenAI_Model = "davinci-002") Then
         bRes = OpenAI_Completion(strOpenAI_URL, strOpenAI_APIKey, strOpenAI_Model, strPrompt)
         bRes = False
+    ElseIf (strOpenAI_Model = "gpt-image-1") Then
+        MsgBox ("The VBA code doesn't support this model yet.")
+        bRes = False
     ElseIf (Left(strOpenAI_Model, 4) = "gpt-") Then
-        bRes = OpenAI_ChatCompletion(strOpenAI_URL, strOpenAI_APIKey, strOpenAI_Model, strPrompt)
+        If (bResponseAPI) Then
+            bRes = OpenAI_Responses(strOpenAI_URL, strOpenAI_APIKey, strOpenAI_Model, strPrompt)
+        Else
+            bRes = OpenAI_ChatCompletion(strOpenAI_URL, strOpenAI_APIKey, strOpenAI_Model, strPrompt)
+        End If
     Else
         MsgBox ("The VBA code doesn't support this model yet.")
         bRes = False
@@ -134,7 +134,6 @@ Public Sub Processing_ChatGPT()
     ThisWorkbook.Sheets("VBA").TextBox5 = strStatus
     
 End Sub
-'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_Completion(ByVal strOpenAI_URL As String, ByVal strOpenAI_APIKey As String, ByVal strOpenAI_Model As String, ByVal strInputTextUser As String) As Boolean
 
     Dim httpRequest As MSXML2.XMLHTTP60
@@ -165,8 +164,8 @@ Private Function OpenAI_Completion(ByVal strOpenAI_URL As String, ByVal strOpenA
     
     'Open and send the HTTP request
     Call httpRequest.Open("POST", strURL, False)
-    Call httpRequest.SetRequestHeader("Content-Type", "application/json")
     Call httpRequest.SetRequestHeader("Authorization", strAuthCredentials)
+    Call httpRequest.SetRequestHeader("Content-Type", "application/json")
     Call httpRequest.Send(requestJSON)
     
     requestReadyState = httpRequest.readyState
@@ -211,8 +210,8 @@ Private Function OpenAI_Completion(ByVal strOpenAI_URL As String, ByVal strOpenA
 OpenAI_Completion:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure OpenAI_Completion, line " & Erl & "."
 
+
 End Function
-'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_ChatCompletion(ByVal strOpenAI_URL As String, ByVal strOpenAI_APIKey As String, ByVal strOpenAI_Model As String, ByVal strInputTextUser As String) As Boolean
 
     Dim httpRequest As MSXML2.XMLHTTP60
@@ -242,8 +241,8 @@ Private Function OpenAI_ChatCompletion(ByVal strOpenAI_URL As String, ByVal strO
     
     'Open and send the HTTP request
     Call httpRequest.Open("POST", strURL, False)
-    Call httpRequest.SetRequestHeader("Content-Type", "application/json")
     Call httpRequest.SetRequestHeader("Authorization", strAuthCredentials)
+    Call httpRequest.SetRequestHeader("Content-Type", "application/json")
     Call httpRequest.Send(requestJSON)
     
     requestReadyState = httpRequest.readyState
@@ -286,55 +285,137 @@ OpenAI_ChatCompletion:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure OpenAI_ChatCompletion, line " & Erl & "."
      
 End Function
-'-----------------------------------------------------------------------------------------------
-Private Function OpenAI_Pricing(ByVal strOpenAI_Model As String) As Single
+Private Function OpenAI_Responses(ByVal strOpenAI_URL As String, ByVal strOpenAI_APIKey As String, ByVal strOpenAI_Model As String, ByVal strInputTextUser As String) As Boolean
 
+    Dim httpRequest As MSXML2.XMLHTTP60
+    Dim strAuthCredentials As String
+    Dim requestReadyState As Long
+    Dim requestStatus As Long
+    Dim requestJSON As String
+    Dim strURL As String
+    Dim completion As String
+    Dim RESPONSE As String
+    Dim tokens As String
     Dim pricing_per_token As Single
+    Dim pricing As Single
     
-    'Pricing pour 1000 tokens (Not updated in real time. Please check the website)
+    ThisWorkbook.Sheets("VBA").TextBox5 = "Processing"
+    
+    strURL = strOpenAI_URL & "/v1/responses"
+    
+    pricing_per_token = OpenAI_Pricing(strOpenAI_Model)
+    
+    strAuthCredentials = "Bearer " & strOpenAI_APIKey
+    requestJSON = OpenAI_Model2JSON(strInputTextUser, strOpenAI_Model)
+    
+    On Error GoTo OpenAI_Responses
+    
+    Set httpRequest = CreateObject("MSXML2.XMLHTTP")
+    
+    'Open and send the HTTP request
+    Call httpRequest.Open("POST", strURL, False)
+    Call httpRequest.SetRequestHeader("Authorization", strAuthCredentials)
+    Call httpRequest.SetRequestHeader("Content-Type", "application/json")
+    Call httpRequest.Send(requestJSON)
+    
+    requestReadyState = httpRequest.readyState
 
-    If (strOpenAI_Model = "gpt-3.5-turbo") Then
-        pricing_per_token = 0.002
-    ElseIf (strOpenAI_Model = "gpt-4") Then
-        pricing_per_token = 0.06
-    ElseIf (strOpenAI_Model = "gpt-4-8k") Then 'prompt
-        pricing_per_token = 0.03
-     ElseIf (strOpenAI_Model = "gpt-4-32k") Then 'completion
-        pricing_per_token = 0.06
-    ElseIf (strOpenAI_Model = "ada") Then
-        pricing_per_token = 0.0004
-    ElseIf (strOpenAI_Model = "davinci" Or strOpenAI_Model = "test-davinci-003" Or strOpenAI_Model = "test-davinci-002") Then
-        pricing_per_token = 0.02
-    ElseIf (strOpenAI_Model = "curie") Then
-        pricing_per_token = 0.002
-    ElseIf (strOpenAI_Model = "babbage") Then
-        pricing_per_token = 0.0005
+    'Check if the request is successful
+    If requestReadyState = 1 Then
+        ThisWorkbook.Sheets("VBA").TextBox4 = "Error: httpRequest.readyState=1"
+        OpenAI_Responses = False
+    ElseIf requestReadyState = 4 Then
+        requestStatus = httpRequest.Status
+        completion = httpRequest.responseText
+        ThisWorkbook.Sheets("VBA").TextBox4 = completion
+        ThisWorkbook.Sheets("VBA").TextBox11 = requestStatus
+        If requestStatus = 200 Then
+            ThisWorkbook.Sheets("VBA").TextBox10 = "General checks: OK"
+            
+            'Parse the JSON response
+            RESPONSE = OpenAI_Decode_JSON_completion(completion, strOpenAI_Model)
+            tokens = OpenAI_Decode_JSON_completion_tokens(completion)
+            pricing = CInt(tokens) * pricing_per_token
+            ThisWorkbook.Sheets("VBA").TextBox3 = RESPONSE
+            ThisWorkbook.Sheets("VBA").TextBox15 = tokens & " tokens"
+            ThisWorkbook.Sheets("VBA").TextBox16 = "$ " & CStr(pricing)
+            OpenAI_Responses = True
+        Else
+            'Parse the JSON response
+            RESPONSE = OpenAI_Decode_JSON_ChatGPTError(completion)
+            ThisWorkbook.Sheets("VBA").TextBox3 = RESPONSE
+            OpenAI_Responses = False
+        End If
     Else
-        pricing_per_token = 0
+        ThisWorkbook.Sheets("VBA").TextBox4 = "Error: httpRequest.readyState not defined"
+        OpenAI_Responses = False
     End If
-
-    OpenAI_Pricing = pricing_per_token / 1000
     
+    On Error GoTo 0
+    Exit Function
+        
+OpenAI_Responses:
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure OpenAI_Responses, line " & Erl & "."
+     
 End Function
-'-----------------------------------------------------------------------------------------------
 Public Function OpenAI_Model2JSON(ByVal strInputText As String, ByVal strOpenAI_Model As String) As String
 
     Dim strMessages As String
     Dim requestBody As String
     Dim strTextSystem As String
     Dim strModel As String
+    Dim bResponseAPI As Boolean
     
     strModel = ThisWorkbook.Sheets("VBA").ComboBox1
+    bResponseAPI = ThisWorkbook.Sheets("VBA").CheckBox1
     
     'Const RESPONSE_FORMAT As String = "{""type"" : ""json_object""}"
     Const MAX_TOKENS As Long = 1024 'Defaults to 16. The maximum number of tokens that can be generated in the completion. The token count of your prompt plus max_tokens cannot exceed the model's context length.
     Const TEMPERATURE As Single = 1 'Defaults to 1. What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. We generally recommend altering this or top_p but not both.
     Const TOP_P As Single = 1 'Defaults to 1. An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered. We generally recommend altering this or temperature but not both.
     Const N As Integer = 1 'Defaults to 1. How many completions to generate for each prompt.
+    Const REASONING_EFFORT As String = "medium" 'high, medium, low or minimal
+    Const VERBOSITY As String = "medium" 'high, medium, or low
      
     strTextSystem = ThisWorkbook.Sheets("VBA").TextBox13
     
-    If (strOpenAI_Model = "gpt-3.5-turbo-instruct" Or strOpenAI_Model = "babbage-002" Or strOpenAI_Model = "davinci-002") Then
+    If (Left(strOpenAI_Model, 5) = "gpt-5") Then
+        strMessages = "[]"
+        strMessages = OpenAI_AppendMessage(strMessages, "system", strTextSystem)
+        strMessages = OpenAI_AppendMessage(strMessages, "user", strInputText)
+        
+        If (bResponseAPI) Then
+            requestBody = "{" & _
+                """model"": """ & strModel & """" & _
+                "," & _
+                """max_output_tokens"": " & MAX_TOKENS & _
+                "," & _
+                """temperature"": " & TEMPERATURE & _
+                "," & _
+                """top_p"": " & TOP_P & _
+                "," & _
+                """input"": " & strMessages & "" & _
+                "}"
+        Else
+            requestBody = "{" & _
+                """model"": """ & strModel & """" & _
+                "," & _
+                """max_completion_tokens"": " & MAX_TOKENS & _
+                "," & _
+                """temperature"": " & TEMPERATURE & _
+                "," & _
+                """top_p"": " & TOP_P & _
+                "," & _
+                """n"": " & N & _
+                "," & _
+                """messages"": " & strMessages & "" & _
+                "," & _
+                """reasoning_effort"": """ & REASONING_EFFORT & """" & _
+                "," & _
+                """verbosity"": """ & VERBOSITY & """" & _
+                "}"
+        End If
+    ElseIf (strOpenAI_Model = "gpt-3.5-turbo-instruct" Or strOpenAI_Model = "babbage-002" Or strOpenAI_Model = "davinci-002") Then
         requestBody = "{" & _
                     """model"": """ & strModel & """" & _
                     "," & _
@@ -371,7 +452,6 @@ Public Function OpenAI_Model2JSON(ByVal strInputText As String, ByVal strOpenAI_
     OpenAI_Model2JSON = requestBody
 
 End Function
-'-----------------------------------------------------------------------------------------------
 Public Function OpenAI_AppendMessage(ByVal strMessages As String, ByVal strRole As String, ByVal strInputText As String) As String
 
     Dim strJSON As String
@@ -391,7 +471,6 @@ Public Function OpenAI_AppendMessage(ByVal strMessages As String, ByVal strRole 
     OpenAI_AppendMessage = strMessages
     
 End Function
-'-----------------------------------------------------------------------------------------------
 Public Function OpenAI_InputRole2JSON(ByVal strRole As String, ByVal strText As String) As String
 
     Dim strJSON As String
@@ -407,7 +486,6 @@ Public Function OpenAI_InputRole2JSON(ByVal strRole As String, ByVal strText As 
     OpenAI_InputRole2JSON = strJSON
     
 End Function
-'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_Decode_JSON_completion(ByVal completion As String, ByVal strOpenAI_Model As String) As String
 
     On Error GoTo OpenAI_Decode_JSON_Error
@@ -416,6 +494,9 @@ Private Function OpenAI_Decode_JSON_completion(ByVal completion As String, ByVal
     Dim json2 As Object
     Dim json3 As Object
     Dim textElement As String
+    Dim bResponseAPI As Boolean
+    
+    bResponseAPI = ThisWorkbook.Sheets("VBA").CheckBox1
     
     'Call the 'JsonConverter' VBA module
     If (strOpenAI_Model = "gpt-3.5-turbo-instruct" Or strOpenAI_Model = "babbage-002" Or strOpenAI_Model = "davinci-002") Then
@@ -423,10 +504,17 @@ Private Function OpenAI_Decode_JSON_completion(ByVal completion As String, ByVal
         Set json2 = json1("choices")(1)
         textElement = json2("text")
     ElseIf (Left(strOpenAI_Model, 4) = "gpt-") Then
-        Set json1 = JsonConverter.ParseJson(completion)
-        Set json2 = json1("choices")(1)
-        Set json3 = json2("message")
-        textElement = json3("content")
+        If (bResponseAPI) Then
+            Set json1 = JsonConverter.ParseJson(completion)
+            Set json2 = json1("output")(2)
+            Set json3 = json2("content")(1)
+            textElement = json3("text")
+        Else
+            Set json1 = JsonConverter.ParseJson(completion)
+            Set json2 = json1("choices")(1)
+            Set json3 = json2("message")
+            textElement = json3("content")
+        End If
     End If
     
     OpenAI_Decode_JSON_completion = textElement
@@ -439,7 +527,6 @@ OpenAI_Decode_JSON_Error:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure OpenAI_Decode_JSON_completion, line " & Erl & "."
 
 End Function
-'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_Decode_JSON_completion_tokens(ByVal completion As String) As String
 
     On Error GoTo OpenAI_Decode_JSON_Error
@@ -463,7 +550,6 @@ OpenAI_Decode_JSON_Error:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure OpenAI_Decode_JSON_completion_tokens, line " & Erl & "."
 
 End Function
-'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_Decode_JSON_ChatGPTError(ByVal completion As String) As String
 
     On Error GoTo OpenAI_Decode_JSON_ChatGPTError_Error
@@ -486,7 +572,6 @@ OpenAI_Decode_JSON_ChatGPTError_Error:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure OpenAI_Decode_JSON_ChatGPTError, line " & Erl & "."
 
 End Function
-'-----------------------------------------------------------------------------------------------
 Public Function OpenAI_Test_URL(ByVal strOpenAI_URL As String, ByVal strOpenAI_APIKey As String, ByVal strOpenAI_Model As String) As Boolean
 
     Dim httpRequest As MSXML2.XMLHTTP60
@@ -503,12 +588,12 @@ Public Function OpenAI_Test_URL(ByVal strOpenAI_URL As String, ByVal strOpenAI_A
     
     'Verification de la connexion a l'URL
     Call httpRequest.Open("GET", strURL, False)
-    Call httpRequest.SetRequestHeader("Content-Type", "application/json")
     Call httpRequest.SetRequestHeader("Authorization", strAuthCredentials)
+    Call httpRequest.SetRequestHeader("Content-Type", "application/json")
     Call httpRequest.Send
     
     
-    'Application.Wait Now + TimeValue( 0:00:03 )
+    'Application.Wait Now + TimeValue(“0:00:03”)
     
     'Do While httpRequest.readyState <> 1
         'If time_chrono >= TIMEOUT Exit Do
@@ -544,7 +629,6 @@ Public Function OpenAI_Test_URL(ByVal strOpenAI_URL As String, ByVal strOpenAI_A
     End If
     
 End Function
-'-----------------------------------------------------------------------------------------------
 Public Function OpenAI_GetModelData(ByVal strOpenAI_URL As String, ByVal strOpenAI_APIKey As String, ByVal strOpenAI_Model As String) As String
 
     Dim httpRequest As MSXML2.XMLHTTP60
@@ -562,8 +646,8 @@ Public Function OpenAI_GetModelData(ByVal strOpenAI_URL As String, ByVal strOpen
     
     'Verification de la connexion a l'URL
     Call httpRequest.Open("GET", strURL, False)
-    Call httpRequest.SetRequestHeader("Content-Type", "application/json")
     Call httpRequest.SetRequestHeader("Authorization", strAuthCredentials)
+    Call httpRequest.SetRequestHeader("Content-Type", "application/json")
     Call httpRequest.Send
     
     requestReadyState = httpRequest.readyState
@@ -578,7 +662,6 @@ Public Function OpenAI_GetModelData(ByVal strOpenAI_URL As String, ByVal strOpen
     End If
 
 End Function
-'-----------------------------------------------------------------------------------------------
 Private Function OpenAI_Errors(ByVal strErrorCode As String, ByVal strCompletion As String) As String
 
     Dim strErrorMessage As String
@@ -606,4 +689,39 @@ Private Function OpenAI_Errors(ByVal strErrorCode As String, ByVal strCompletion
     
     OpenAI_Errors = strErrorMessage
 
+End Function
+Private Function OpenAI_Pricing(ByVal strOpenAI_Model As String) As Single
+
+    Dim pricing_per_token As Single
+    
+    'Pricing pour 1000 tokens (Not updated in real time. Please check the website)
+
+    If (strOpenAI_Model = "gpt-5") Then
+        pricing_per_token = 1.25
+    ElseIf (strOpenAI_Model = "gpt-5-mini") Then
+        pricing_per_token = 0.25
+    ElseIf (strOpenAI_Model = "gpt-5-nano") Then
+        pricing_per_token = 0.05
+    ElseIf (strOpenAI_Model = "gpt-3.5-turbo") Then
+        pricing_per_token = 0.002
+    ElseIf (strOpenAI_Model = "gpt-4") Then
+        pricing_per_token = 0.06
+    ElseIf (strOpenAI_Model = "gpt-4-8k") Then 'prompt
+        pricing_per_token = 0.03
+     ElseIf (strOpenAI_Model = "gpt-4-32k") Then 'completion
+        pricing_per_token = 0.06
+    ElseIf (strOpenAI_Model = "ada") Then
+        pricing_per_token = 0.0004
+    ElseIf (strOpenAI_Model = "davinci" Or strOpenAI_Model = "test-davinci-003" Or strOpenAI_Model = "test-davinci-002") Then
+        pricing_per_token = 0.02
+    ElseIf (strOpenAI_Model = "curie") Then
+        pricing_per_token = 0.002
+    ElseIf (strOpenAI_Model = "babbage") Then
+        pricing_per_token = 0.0005
+    Else
+        pricing_per_token = 0
+    End If
+
+    OpenAI_Pricing = pricing_per_token / 1000
+    
 End Function
