@@ -17,6 +17,7 @@ Attribute VB_Name = "Module1"
 ' ThisWorkbook.Sheets("VBA").TextBox14 : OpenAI_SystemRole_JSON
 ' ThisWorkbook.Sheets("VBA").TextBox15 : Number_Tokens
 ' ThisWorkbook.Sheets("VBA").TextBox16 : Price
+' ThisWorkbook.Sheets("VBA").Checkbox1 : use of Responses API instead of ChatCompletion API
 
 Option Explicit
 
@@ -725,3 +726,4 @@ Private Function OpenAI_Pricing(ByVal strOpenAI_Model As String) As Single
     OpenAI_Pricing = pricing_per_token / 1000
     
 End Function
+
