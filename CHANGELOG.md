@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.1 (2025-08-10)
+* First implementation of Responses API
+
 ## 5.0.0 (2025-08-10)
 * support of gpt-5 models
 * add reasoning_effort and verbosity for gpt-5 model
