@@ -16,6 +16,7 @@
 ' ThisWorkbook.Sheets("VBA").TextBox14 : OpenAI_SystemRole_JSON
 ' ThisWorkbook.Sheets("VBA").TextBox15 : Number_Tokens
 ' ThisWorkbook.Sheets("VBA").TextBox16 : Price
+' ThisWorkbook.Sheets("VBA").Checkbox1 : use of Responses API instead of ChatCompletion API
 
 Option Explicit
 
@@ -78,3 +79,4 @@ Private Sub TextBox2_Change()
     ThisWorkbook.Sheets("VBA").TextBox7 = MODEL
     
 End Sub
+
