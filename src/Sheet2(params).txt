@@ -17,6 +17,7 @@ gpt-5
 gpt-5-pro
 gpt-5-mini
 gpt-5-nano
+gpt-5-codex
 gpt-4.1
 gpt-4.1-mini
 gpt-4.1-nano
@@ -41,6 +42,8 @@ gpt-image-1.5
 gpt-image-1
 gpt-image-1-mini
 gpt-audio-mini
+o3-pro
+o3-deep-research
 o4-mini
 o4-mini-deep-research
 o3-mini
