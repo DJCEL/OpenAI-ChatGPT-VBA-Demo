@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.2 (2026-04-2)
+* support of gpt-5.x models
+
 ## 5.0.1 (2025-08-10)
 * First implementation of Responses API
 
